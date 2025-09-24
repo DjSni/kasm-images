@@ -35,8 +35,7 @@ jobs:
 #    needs: [setup-matrix]
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     strategy:
-      max-parallel: 1
-      continue-on-error: true
+      max-parallel: 2
       matrix:
 #        work_name: ${{ fromJSON(needs.setup-matrix.outputs.dockerfiles) }}
 #        work_name: [winbox, ubuntu-desktop]

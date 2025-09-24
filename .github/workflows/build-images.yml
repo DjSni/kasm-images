@@ -38,8 +38,7 @@ jobs:
       max-parallel: 2
       matrix:
 #        work_name: ${{ fromJSON(needs.setup-matrix.outputs.dockerfiles) }}
-#        work_name: [winbox, ubuntu-desktop]
-        work_name: [winbox]
+        work_name: [winbox, ubuntu-desktop]
         version: [1.16.1, 1.17.0]
     permissions:
       contents: read

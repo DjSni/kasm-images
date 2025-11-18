@@ -51,12 +51,17 @@ jobs:
       - name: Set ENV variables
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "SAVED_COMMIT_HASH=$(cat dependencies/kasm-images-commit)" >> $GITHUB_ENV
 #          echo "VERSION=1.16.1" >> $GITHUB_ENV
       - name: echo VARs
         run: |
           echo ${{matrix.work_name}}
           echo ${{env.COMMIT_HASH}}
+          echo ${{env.SAVED_COMMIT_HASH}}
           echo ${{matrix.version}}
+      - name: Write commit hash if is new
+        if: ${{ env.COMMIT_HASH != env.SAVED_COMMIT_HASH }}
+        run: echo "${{ env.COMMIT_HASH }}" > dependencies/kasm-images-commit
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -113,3 +118,14 @@ jobs:
 #          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 #          repository: dersni/kasm-images
 #          readme-filepath: README.md
+# If all done, commit changes
+      - name: Commit changes an push it to remote
+        uses: actions-x/commit@v6
+        with:
+          email: 41898282+github-actions[bot]@users.noreply.github.com
+          name: GitHub Actions
+          branch: main
+          files: dependencies/kasm-images-commit
+          repository: https://github.com/DjSni/kasm-images
+          token: ${{ secrets.GITHUB_TOKEN }}
+          force: false

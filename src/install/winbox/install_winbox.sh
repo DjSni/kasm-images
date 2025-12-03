@@ -9,7 +9,8 @@ if [ "${ARCH}" == "arm64" ] ; then
 fi
 
 # Set VARS
-DOWNLOAD_URL=$(wget --https-only -qO- https://mikrotik.com/download | grep -oP '<li><a href="\K[^"]+(?=.*Linux)')
+LATEST_WINBOX=$(wget --https-only -qO- "https://mikrotik.com/download/winbox" | grep -oP 'new in \K[0-9][0-9A-Za-z.]+' | head -n1)
+DOWNLOAD_URL="https://download.mikrotik.com/routeros/winbox/${WINBOX_VERSION}/WinBox_Linux.zip"
 WINBOX_DIR="winbox4"
 WINBOX_INSTALL_DIR="/opt/$WINBOX_DIR"
 SYMLINK_PATH="/usr/local/bin/winbox"

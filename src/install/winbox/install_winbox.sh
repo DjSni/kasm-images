@@ -10,7 +10,7 @@ fi
 
 # Set VARS
 LATEST_WINBOX=$(wget --https-only -qO- "https://mikrotik.com/download/winbox" | grep -oP 'new in \K[0-9][0-9A-Za-z.]+' | head -n1)
-DOWNLOAD_URL="https://download.mikrotik.com/routeros/winbox/${WINBOX_VERSION}/WinBox_Linux.zip"
+DOWNLOAD_URL="https://download.mikrotik.com/routeros/winbox/${LATEST_WINBOX}/WinBox_Linux.zip"
 WINBOX_DIR="winbox4"
 WINBOX_INSTALL_DIR="/opt/$WINBOX_DIR"
 SYMLINK_PATH="/usr/local/bin/winbox"

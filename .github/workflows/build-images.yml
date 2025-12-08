@@ -31,15 +31,13 @@ jobs:
 #          echo "value=$(ls -p | grep dockerfile | sed 's/dockerfile-//g' | grep -v / | jq -R | jq -s -c)" >> "$GITHUB_OUTPUT"
 
   first:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-#    needs: [setup-matrix]
-    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     strategy:
       max-parallel: 2
       matrix:
-#        work_name: ${{ fromJSON(needs.setup-matrix.outputs.dockerfiles) }}
         work_name: [winbox, ubuntu-desktop]
-        version: [1.16.1, 1.17.0]
+        version: [1.17.0, 1.18.0, 1.18.1]
     permissions:
       contents: read
       packages: write
@@ -51,17 +49,11 @@ jobs:
       - name: Set ENV variables
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo "SAVED_COMMIT_HASH=$(cat dependencies/kasm-images-commit)" >> $GITHUB_ENV
-#          echo "VERSION=1.16.1" >> $GITHUB_ENV
       - name: echo VARs
         run: |
           echo ${{matrix.work_name}}
           echo ${{env.COMMIT_HASH}}
-          echo ${{env.SAVED_COMMIT_HASH}}
           echo ${{matrix.version}}
-      - name: Write commit hash if is new
-        if: ${{ env.COMMIT_HASH != env.SAVED_COMMIT_HASH }}
-        run: echo "${{ env.COMMIT_HASH }}" > dependencies/kasm-images-commit
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -119,6 +111,19 @@ jobs:
 #          repository: dersni/kasm-images
 #          readme-filepath: README.md
 # If all done, commit changes
+
+  second:
+    if: github.actor != 'github-actions[bot]' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set ENV variables
+        run: |
+          echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "SAVED_COMMIT_HASH=$(cat dependencies/kasm-images-commit)" >> $GITHUB_ENV
+      - name: Write commit hash
+        run: echo "${{ env.COMMIT_HASH }}" > dependencies/kasm-images-commit      
       - name: Commit changes an push it to remote
         uses: actions-x/commit@v6
         with:
@@ -128,4 +133,4 @@ jobs:
           files: dependencies/kasm-images-commit
           repository: https://github.com/DjSni/kasm-images
           token: ${{ secrets.GITHUB_TOKEN }}
-          force: false
+          force: true

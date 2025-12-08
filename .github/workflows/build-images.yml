@@ -114,6 +114,7 @@ jobs:
 
   second:
     if: github.actor != 'github-actions[bot]' && github.event_name != 'pull_request'
+    needs: first
     runs-on: ubuntu-latest 
     steps:
       - name: Checkout

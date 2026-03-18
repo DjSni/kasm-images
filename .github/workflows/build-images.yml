@@ -26,7 +26,7 @@ jobs:
       #max-parallel: 2
       matrix:
         work_name: [winbox, ubuntu-desktop]
-        version: [1.17.0, 1.18.0]
+        version: [1.18.0, 1.18.1]
     permissions:
       contents: read
       packages: write
@@ -81,7 +81,7 @@ jobs:
             dersni/kasm-images:${{matrix.work_name}}-${{matrix.version}}
             dersni/kasm-images:${{matrix.work_name}}-${{matrix.version}}.${{ github.run_number }}
             dersni/kasm-images:${{matrix.work_name}}-${{matrix.version}}.${{ github.run_number }}-${{ env.COMMIT_HASH }}
-            ${{ matrix.version == '1.17.0' && format('{0}:{1}-latest', 'dersni/kasm-images', matrix.work_name) || null}}
+            ${{ matrix.version == '1.18.1' && format('{0}:{1}-latest', 'dersni/kasm-images', matrix.work_name) || null}}
           build-args: |
             BASE_TAG=${{matrix.version}}-rolling-weekly
             BASE_IMAGE=core-ubuntu-noble

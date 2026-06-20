@@ -34,7 +34,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set ENV variables
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set ENV variables
         run: |
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV

@@ -6,11 +6,16 @@ apt-get update
 apt-get install -y ./vs_code.deb
 mkdir -p /usr/share/icons/hicolor/apps
 wget -O /usr/share/icons/hicolor/apps/vscode.svg https://kasm-static-content.s3.amazonaws.com/icons/vscode.svg
-sed -i '/Icon=/c\Icon=/usr/share/icons/hicolor/apps/vscode.svg' /usr/share/applications/code.desktop
-sed -i 's#/usr/share/code/code#/usr/share/code/code --no-sandbox##' /usr/share/applications/code.desktop
-cp /usr/share/applications/code.desktop $HOME/Desktop
-chmod +x $HOME/Desktop/code.desktop
-chown 1000:1000 $HOME/Desktop/code.desktop
+code_desktop=$(find /usr/share/applications -maxdepth 1 -name 'code*.desktop' -print -quit)
+if [ -z "$code_desktop" ]; then
+    echo "VS Code desktop entry not found under /usr/share/applications" >&2
+    exit 1
+fi
+sed -i '/Icon=/c\Icon=/usr/share/icons/hicolor/apps/vscode.svg' "$code_desktop"
+sed -i 's#/usr/share/code/code#/usr/share/code/code --no-sandbox##' "$code_desktop"
+cp "$code_desktop" "$HOME/Desktop/code.desktop"
+chmod +x "$HOME/Desktop/code.desktop"
+chown 1000:1000 "$HOME/Desktop/code.desktop"
 rm vs_code.deb
 
 # Conveniences for python development
